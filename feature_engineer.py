@@ -611,8 +611,9 @@ if __name__ == "__main__":
     target_start = processing_start
     target_end = processing_end + time_step
 
-    # Process all 11 households sequentially.
-    for household_id in range(1, 12):
+    # Process datasets sequentially.
+    # Change the upper bound depending on the number of available dataframes.
+    for household_id in range(1, 2):
         dataset_name = f"df_{household_id}"
 
         input_path = (

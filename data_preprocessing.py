@@ -286,17 +286,7 @@ class ElectricityDataPreprocessor:
 
 if __name__ == "__main__":
     input_files = {
-        "df_1": "data/dfs/df_1.csv",
-        "df_2": "data/dfs/df_2.csv",
-        "df_3": "data/dfs/df_3.csv",
-        "df_4": "data/dfs/df_4.csv",
-        "df_5": "data/dfs/df_5.csv",
-        "df_6": "data/dfs/df_6.csv",
-        "df_7": "data/dfs/df_7.csv",
-        "df_8": "data/dfs/df_8.csv",
-        "df_9": "data/dfs/df_9.csv",
-        "df_10": "data/dfs/df_10.csv",
-        "df_11": "data/dfs/df_11.csv",
+        "df_1": "data/dfs/df_1.csv"
     }
 
     preprocessor = ElectricityDataPreprocessor(
