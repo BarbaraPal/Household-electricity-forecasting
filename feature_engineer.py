@@ -11,7 +11,10 @@ import pandas as pd
 import tsfresh
 from tsfresh import extract_features
 from tsfresh.feature_extraction import EfficientFCParameters
-from tsfresh.utilities.dataframe_functions import impute, roll_time_series
+from tsfresh.utilities.dataframe_functions import (
+    impute_dataframe_zero,
+    roll_time_series,
+)
 
 from config import (
     FEATURE_ENGINEERING_RUN_INFO_FILE,
@@ -195,23 +198,11 @@ class FeatureEngineer:
         dataframe = dataframe.reindex(full_index)
         dataframe.index.name = "ds"
 
-        missing_before = int(dataframe["y"].isna().sum())
+        missing_count = int(dataframe["y"].isna().sum())
 
-        if missing_before > 0:
-            print(
-                f"Interpolating {missing_before} missing measurements."
-            )
-
-        dataframe["y"] = dataframe["y"].interpolate(
-            method="linear",
-            limit_direction="both",
-        )
-
-        missing_after = int(dataframe["y"].isna().sum())
-
-        if missing_after > 0:
+        if missing_count > 0:
             raise ValueError(
-                f"{missing_after} missing values remain after interpolation."
+                f"The input series contains {missing_count} missing values."
             )
 
         dataframe = dataframe.reset_index()
@@ -253,7 +244,7 @@ class FeatureEngineer:
             column_sort="ds",
             column_value="y",
             default_fc_parameters=self.roll_feat_params[roll_size],
-            impute_function=impute,
+            impute_function=impute_dataframe_zero,
             n_jobs=n_jobs,
         )
 
@@ -451,6 +442,7 @@ class FeatureEngineer:
             "end": self.end.strftime("%Y-%m-%d %H:%M:%S"),
             "freq": self.freq,
             "horizon": self.horizon,
+            "imputation": "tsfresh.impute_dataframe_zero",
             "roll_sizes": self.roll_sizes,
             "roll_feat_params": {
                 str(roll_size): self.roll_feat_params[
